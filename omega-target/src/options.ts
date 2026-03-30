@@ -3,6 +3,7 @@ import Log from './log'
 import Storage, { StorageItems } from './storage'
 import * as OmegaPac from 'omega-pac'
 import { patch as jsonPatch } from 'jsondiffpatch'
+import type { Delta } from 'jsondiffpatch'
 import defaultOptions from './default_options'
 import type OptionsSync from './options_sync'
 
@@ -511,7 +512,7 @@ class Options {
   patch(patch: Record<string, unknown>): Promise<unknown> | undefined {
     if (!patch) return
     this.log.method('Options#patch', this, arguments)
-    this._options = jsonPatch(this._options as unknown, patch as unknown) as StorageItems
+    this._options = jsonPatch(this._options as unknown, patch as unknown as Delta) as StorageItems
     const changes: StorageItems = {}
     for (const key of Object.keys(patch)) {
       const delta = patch[key] as unknown[]
@@ -1390,7 +1391,6 @@ class Options {
       useBuiltInSync?: boolean
     } = {}
   ): Promise<unknown> {
-    }
     return this._state
       .get({ syncOptions: '', lastGistCommit: '' })
       .then(({ syncOptions, lastGistCommit: _lc }) => {
@@ -1431,7 +1431,7 @@ class Options {
             }) => {
               return this._state
                 .set({ syncOptions: 'sync', gistId, gistToken })
-                .then(() => {
+                .then((): Promise<unknown> | void => {
                   if (syncOptions === 'conflict') {
                     this.sync!.enabled = false
                     this._watchStop?.()

@@ -106,7 +106,6 @@ class OptionsSync {
 
     const diff = createDiff({
       objectHash: (obj: unknown) => JSON.stringify(obj),
-      textDiff: { minLength: Infinity },
     })
 
     this.merge = (key: string, newVal: unknown, oldVal: unknown): unknown => {

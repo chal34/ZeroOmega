@@ -1,5 +1,6 @@
 import * as esbuild from 'esbuild'
 import { execSync } from 'child_process'
+import { copyFileSync } from 'fs'
 
 const release = process.env.BUILD === 'release'
 
@@ -17,9 +18,8 @@ await esbuild.build({
   sourcemap: release ? false : 'inline',
 })
 
-// Generate type declarations into root (outDir overrides tsconfig)
-execSync('npx tsc --declaration --emitDeclarationOnly --outDir . --rootDir src', {
-  stdio: 'inherit',
-})
+// Generate type declarations (emitted to dist-types/, then copy root declaration)
+execSync('npx tsc --declaration --emitDeclarationOnly', { stdio: 'inherit' })
+copyFileSync('dist-types/index.d.ts', 'index.d.ts')
 
 console.log('omega-target build complete')

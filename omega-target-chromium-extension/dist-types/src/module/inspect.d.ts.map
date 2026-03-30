@@ -1,0 +1,1 @@
+{"version":3,"file":"inspect.d.ts","sourceRoot":"","sources":["../../../src/module/inspect.ts"],"names":[],"mappings":"AAEA,cAAM,OAAO;IACX,QAAQ,UAAQ;IAChB,SAAS,EAAE,GAAG,CAAA;IAEd,eAAe,EAAE,MAAM,CAAC,MAAM,EAAE,MAAM,CAAC,CAItC;gBAEW,SAAS,EAAE,GAAG;IAI1B,MAAM;IA+BN,OAAO;IAYP,OAAO,CAAC,IAAI,EAAE,GAAG,EAAE,GAAG,EAAE,GAAG;CAU5B;AAED,SAAS,OAAO,CAAA"}
