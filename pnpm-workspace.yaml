@@ -1,0 +1,5 @@
+packages:
+  - 'omega-pac'
+  - 'omega-target'
+  - 'omega-web'
+  - 'omega-target-chromium-extension'

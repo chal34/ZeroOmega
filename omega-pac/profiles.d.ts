@@ -1,0 +1,42 @@
+import { AttachedCache } from './utils';
+declare const Profiles: {
+    builtinProfiles: Record<string, any>;
+    schemes: {
+        scheme: string;
+        prop: string;
+    }[];
+    pacProtocols: Record<string, string>;
+    formatByType: Record<string, string>;
+    ruleListFormats: string[];
+    parseHostPort(str: string, scheme: string): any;
+    pacResult(proxy?: any): string;
+    isFileUrl(url: string): boolean;
+    nameAsKey(profileName: any): string;
+    byName(profileName: any, options?: any): any;
+    byKey(key: any, options?: any): any;
+    each(options: any, callback: (key: string, profile: any) => void): void;
+    profileResult(profileName: any): any;
+    isIncludable(profile: any): boolean;
+    isInclusive(profile: any): boolean;
+    updateUrl(profile: any): any;
+    updateContentTypeHints(profile: any): any;
+    update(profile: any, data: any): any;
+    tag(profile: any): any;
+    create(profile: any, opt_profileType?: string): any;
+    updateRevision(profile: any, revision?: string): void;
+    replaceRef(profile: any, fromName: string, toName: string): boolean;
+    analyze(profile: any): any;
+    dropCache(profile: any): void;
+    directReferenceSet(profile: any): any;
+    profileNotFound(name: string, action?: any): any;
+    allReferenceSet(profile: any, options: any, opt_args?: any): any;
+    referencedBySet(profile: any, options: any, opt_args?: any): any;
+    validResultProfilesFor(profile: any, options: any): any[];
+    match(profile: any, request: any, opt_profileType?: string): any;
+    compile(profile: any, opt_profileType?: string): any;
+    _profileCache: AttachedCache;
+    _handler(profileType: any): any;
+    _profileTypes: Record<string, any>;
+};
+export default Profiles;
+//# sourceMappingURL=profiles.d.ts.map
