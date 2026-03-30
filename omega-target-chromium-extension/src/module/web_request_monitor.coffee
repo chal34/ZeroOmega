@@ -82,7 +82,7 @@ module.exports = class WebRequestMonitor
   _requestRedirected: (req) ->
     url = req.redirectUrl
     return unless url
-    if url.indexOf('data:') == 0 || url.indexOf('about:') == 0
+    if url.startsWith('data:') || url.startsWith('about:')
       @_requestDone(req)
 
   _requestError: (req) ->
@@ -91,16 +91,16 @@ module.exports = class WebRequestMonitor
 
     return if req.tabId < 0
     return if req.error == 'net::ERR_INCOMPLETE_CHUNKED_ENCODING'
-    return if req.error.indexOf('BLOCKED') >= 0
-    return if req.error.indexOf('net::ERR_FILE_') == 0
+    return if req.error.includes('BLOCKED')
+    return if req.error.startsWith('net::ERR_FILE_')
     # Blocked by other extensions in Firefox.
-    return if req.error.indexOf('NS_ERROR_ABORT') == 0
-    return if req.url.indexOf('file:') == 0
-    return if req.url.indexOf('chrome') == 0
-    return if req.url.indexOf('about:') == 0
-    return if req.url.indexOf('moz-') == 0
+    return if req.error.startsWith('NS_ERROR_ABORT')
+    return if req.url.startsWith('file:')
+    return if req.url.startsWith('chrome')
+    return if req.url.startsWith('about:')
+    return if req.url.startsWith('moz-')
     # Some ad-blocking extensions may redirect requests to 127.0.0.1.
-    return if req.url.indexOf('://127.0.0.1') > 0
+    return if req.url.includes('://127.0.0.1')
     return unless reqInfo
     if req.error == 'net::ERR_ABORTED'
       if reqInfo.timeoutCalled and not reqInfo.noTimeout
@@ -164,7 +164,7 @@ module.exports = class WebRequestMonitor
     info = @tabInfo[req.tabId]
     if info
       if status == 'start' and req.type == 'main_frame'
-        if req.url.indexOf('chrome://errorpage/') != 0
+        if not req.url.startsWith('chrome://errorpage/')
           for own key, value of @_newTabInfo()
             info[key] = value
       if info.requestCount > MAXREQUESTCACHE
@@ -185,7 +185,7 @@ module.exports = class WebRequestMonitor
         info.requestCount = Object.keys(info.requests).length
         # if it still exceed MAXREQUESTCACHE, just clean all by reset it
         if info.requestCount > MAXREQUESTCACHE
-          @tabInfo[tab.id] = @_newTabInfo()
+          @tabInfo[req.tabId] = @_newTabInfo()
           return
       reqInfo = info.requests[req.requestId] || {}
       statusObj = {}

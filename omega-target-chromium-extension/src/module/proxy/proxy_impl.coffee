@@ -42,10 +42,9 @@ class ProxyImpl
       _profile = OmegaPac.Profiles.byName(name, options)
       if _profile
         referenced_profiles.push(_profile)
-    cachedProfiles = Array.from(profilePacCache.keys())
-    allProfiles = Object.values(options)
-    cachedProfiles.forEach((cachedProfile) ->
-      if allProfiles.indexOf(cachedProfile) < 0
+    allProfilesSet = new Set(Object.values(options))
+    profilePacCache.forEach((value, cachedProfile) ->
+      if not allProfilesSet.has(cachedProfile)
         profilePacCache.delete(cachedProfile)
     )
     profilePac = profilePacCache.get(profile)

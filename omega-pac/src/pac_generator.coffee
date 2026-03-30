@@ -6,11 +6,7 @@ Profiles = require './profiles'
 module.exports =
   ascii: (str) ->
     str.replace /[\u0080-\uffff]/g, (char) ->
-      hex = char.charCodeAt(0).toString(16)
-      result = '\\u'
-      result += '0' for _ in [hex.length...4]
-      result += hex
-      return result
+      return '\\u' + char.charCodeAt(0).toString(16).padStart(4, '0')
 
   compress: (ast) ->
     ast.figure_out_scope()

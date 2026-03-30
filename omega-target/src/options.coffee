@@ -671,13 +671,18 @@ class Options
         OmegaPac.Profiles.updateRevision(@_tempProfile)
 
       removedKeys = []
+      removedRules = null
       for own key, list of @_tempProfileRulesByProfile
         if not OmegaPac.Profiles.byKey(key, @_options)
           removedKeys.push(key)
+          removedRules ?= new Set()
           for rule in list
             rule.profileName = null
-            @_tempProfile.rules.splice(@_tempProfile.rules.indexOf(rule), 1)
+            removedRules.add(rule)
       if removedKeys.length > 0
+        @_tempProfile.rules = @_tempProfile.rules.filter(
+          (rule) -> not removedRules.has(rule)
+        )
         for key in removedKeys
           delete @_tempProfileRulesByProfile[key]
         OmegaPac.Profiles.updateRevision(@_tempProfile)

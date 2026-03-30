@@ -20,11 +20,17 @@ jobs:
         with:
           node-version: '22'
 
-      - name: Install dependencies, build, release
+      - name: Install dependencies and run tests
         working-directory: 'omega-build'
         run: |
           npm run deps
           npm run dev
+          (cd ../omega-pac && npm test)
+          (cd ../omega-target && npm test)
+
+      - name: Build and release
+        working-directory: 'omega-build'
+        run: |
           npm run build
           npm run release
 
