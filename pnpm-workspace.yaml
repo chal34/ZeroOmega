@@ -3,3 +3,4 @@ packages:
   - 'omega-target'
   - 'omega-web'
   - 'omega-target-chromium-extension'
+  - 'omega-build'

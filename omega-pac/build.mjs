@@ -43,6 +43,7 @@ await esbuild.build({
   // Buffer is global in service workers via Node-compat; mark it external so
   // the bundle doesn't try to resolve the 'buffer' npm package.
   inject: [],
+  footer: { js: 'globalThis.OmegaPac = OmegaPac;' },
   minify: release,
   sourcemap: release ? false : 'inline',
 })

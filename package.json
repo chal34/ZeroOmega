@@ -12,6 +12,9 @@
     "build": "pnpm -r run build",
     "build:release": "BUILD=release pnpm -r run build",
     "test": "pnpm -r run test",
+    "assemble": "node omega-build/assemble.mjs",
+    "ext:build": "pnpm -r run build && node omega-build/assemble.mjs",
+    "ext:release": "BUILD=release pnpm -r run build && node omega-build/assemble.mjs",
     "release": "pnpm --filter omega-target-chromium-extension run release",
     "clean": "pnpm -r run clean --if-present"
   },
