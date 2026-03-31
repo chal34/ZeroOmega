@@ -1,9 +1,9 @@
+// Service worker has no `window` or `global`; polyfill for libraries that expect them
 if (!(globalThis as any).window) {
   ;(globalThis as any).window = globalThis
   ;(globalThis as any).global = globalThis
 }
 ;(window as any).UglifyJS_NoUnsafeEval = true
-;(globalThis as any).startupCheck = undefined
 
 function initContextMenu() {
   if (!chrome.contextMenus) return

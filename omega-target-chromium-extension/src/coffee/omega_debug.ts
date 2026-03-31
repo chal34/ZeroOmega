@@ -43,6 +43,7 @@ const waitTimeFn = (timeout = 1000) => {
         method: 'resetAllOptions',
       },
       (response: any) => {
+        if (chrome.runtime.lastError) { console.error('resetOptions sendMessage error:', chrome.runtime.lastError); return; }
         localStorage.clear()
         Promise.all([
           idbKeyval.clear(logStore),
@@ -55,11 +56,12 @@ const waitTimeFn = (timeout = 1000) => {
           .then(() => {
             chrome.runtime.reload()
           })
+          .catch((e: any) => { console.error('resetOptions cleanup failed:', e) })
       }
     )
   },
   reportIssue: () => {
-    idbKeyval.get('lastError', logStore).then((lastError: any) => {
+    idbKeyval.get('lastError', logStore).catch(() => {}).then((lastError: any) => {
       const url =
         'https://github.com/suziwen/ZeroOmega/issues/new?title=&body='
       let finalUrl = url

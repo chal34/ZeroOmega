@@ -81,7 +81,7 @@ function processPull(syncStore: any) {
               changes: changes,
               remoteOptions: options,
             })
-          })
+          }).catch((e: any) => resolve({}))
         }
       })
       .catch((e: any) => {
@@ -202,6 +202,7 @@ function updateGist(gId: string, options: any) {
             lastGistCommit,
           })
         })
+        .catch((e: any) => console.error('Failed to update gist state', e))
       return data
     })
     .catch((e: any) => {
@@ -294,7 +295,7 @@ class ChromeSyncStorage extends OmegaTarget.Storage {
           idbKeyval.setMany(entries, syncStore).then(() => {
             processPush(syncStore)
             resolve(record)
-          })
+          }).catch(reject)
         } catch (e) {
           reject(e)
         }
@@ -427,14 +428,14 @@ class ChromeSyncStorage extends OmegaTarget.Storage {
                 this.areaName,
                 opts
               )
-            })
+            }).catch((e: any) => { isPulling = false; console.error('Sync flush failed', e) })
           }
-        )
+        ).catch((e: any) => { isPulling = false; console.error('Sync pull failed', e) })
       } else {
         console.log('no changed')
         isPulling = false
       }
-    })
+    }).catch((e: any) => { isPulling = false; console.error('Sync check commit failed', e) })
   }
 
   watch(keys: any, callback: any) {

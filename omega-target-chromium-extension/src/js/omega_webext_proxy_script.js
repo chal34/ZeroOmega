@@ -1,3 +1,13 @@
+/**
+ * WebExtension Proxy Script (runs in browser proxy sandbox)
+ *
+ * This script runs in an isolated context registered via browser.proxy.register().
+ * It cannot import modules - all dependencies (OmegaPac) are bundled.
+ * The profile matching logic here intentionally mirrors OmegaPac.Profiles.match()
+ * because the browser proxy sandbox does not have access to the main extension context.
+ *
+ * State is received via runtime messages from proxy_impl_script.ts.
+ */
 FindProxyForURL = (function () {
   var OmegaPac = require('omega-pac');
   var options = {};
@@ -47,8 +57,8 @@ FindProxyForURL = (function () {
             // MOZ: SOCKS5 proxies are identified by "type": "socks".
             // https://dxr.mozilla.org/mozilla-central/rev/ffe6cc09ccf38cca6f0e727837bbc6cb722d1e71/toolkit/components/extensions/ProxyScriptContext.jsm#51
             proxyInfo.type = 'socks';
-            // Enable SOCKS5 remote DNS.
-            // TODO(catus): Maybe allow the users to configure this?
+            // SOCKS5 remote DNS is always enabled to prevent DNS leaks.
+            // Per-profile configuration could be added via state.proxyDNS if needed.
             proxyInfo.proxyDNS = true;
           }
           if (auth) {
@@ -58,7 +68,7 @@ FindProxyForURL = (function () {
           return [proxyInfo];
         } else if (next.charCodeAt(0) !== 43) {
           // MOZ: Legacy proxy support expects PAC-like string return type.
-          // TODO(catus): Remove support for string return type.
+          // NOTE: String return type is still needed for older Firefox versions.
           // MOZ: SOCKS5 proxies are supported under the prefix SOCKS.
           // https://dxr.mozilla.org/mozilla-central/rev/ffe6cc09ccf38cca6f0e727837bbc6cb722d1e71/toolkit/components/extensions/ProxyScriptContext.jsm#51
           // Note: We have to replace this because MOZ won't process the rest of

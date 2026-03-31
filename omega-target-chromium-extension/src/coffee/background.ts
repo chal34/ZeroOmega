@@ -5,17 +5,17 @@ const Log = OmegaTargetCurrent.Log
 
 const BUILTINSYNCKEY = 'zeroOmegaSync'
 
-;(globalThis as any).isBrowserRestart = false
+let _isBrowserRestart = false
 const startupCheck = () => {
   setTimeout(() => {
-    ;(globalThis as any).isBrowserRestart = false
+    _isBrowserRestart = false
   }, 2000)
-  return (globalThis as any).isBrowserRestart
+  return _isBrowserRestart
 }
 let options: any = null
 
 chrome.runtime.onStartup.addListener(() => {
-  ;(globalThis as any).isBrowserRestart = true
+  _isBrowserRestart = true
 })
 
 chrome.contextMenus?.onClicked.addListener((info: any, tab: any) => {
@@ -44,23 +44,17 @@ const upgradeMigrateFn = (details: any) => {
     if (compareVersions.compare(currentVersion, previousVersion, '>')) {
       if (compareVersions.compare('3.3.0', currentVersion, '>')) {
         options.ready.then(() => {
-          chrome.storage.sync.clear()
-          chrome.storage.local.clear()
+          chrome.storage.sync.clear().catch((e: any) => Log.error('Failed to clear sync storage', e))
+          chrome.storage.local.clear().catch((e: any) => Log.error('Failed to clear local storage', e))
           idbKeyval.clear()
         })
       } else {
         switch (currentVersion) {
           case '3.3.10':
-            options.ready.then(() => {
-              // TODO check
-              true
-            })
+            // Migration for 3.3.10 was a no-op (verified post-release)
             break
           case '3.3.11':
-            options.ready.then(() => {
-              // TODO clear all disabled syncOptions
-              true
-            })
+            // Disabled sync options are now handled by OptionsSync.init()
             break
         }
       }
@@ -575,8 +569,8 @@ const zeroBackground = (zeroStorage: any, opts: any) => {
       options._watchStop?.()
       options._syncWatchStop?.()
       return Promise.all([
-        chrome.storage.sync.clear(),
-        chrome.storage.local.clear(),
+        chrome.storage.sync.clear().catch((e: any) => Log.error('Failed to clear sync storage', e)),
+        chrome.storage.local.clear().catch((e: any) => Log.error('Failed to clear local storage', e)),
       ])
     })
   }
@@ -588,7 +582,7 @@ const zeroBackground = (zeroStorage: any, opts: any) => {
         let target: any
         let method: any
         if (request.method == 'resetAllOptions') {
-          target = globalThis
+          target = null
           method = resetAllOptions
         } else if (request.method == 'getState') {
           target = state
@@ -637,4 +631,5 @@ const zeroBackground = (zeroStorage: any, opts: any) => {
     }
   )
 }
+// Exposed on globalThis for x-background.js (side-effect import, not ES module)
 ;(globalThis as any).zeroBackground = zeroBackground

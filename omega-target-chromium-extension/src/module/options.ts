@@ -147,6 +147,7 @@ class ChromeOptions extends OmegaTarget.Options {
             this.applyProfile(this._currentProfileName)
           }
         })
+        .catch((e: any) => this.log.error('Failed to restore temp profile state', e))
     })
     return this.ready
   }
@@ -158,7 +159,7 @@ class ChromeOptions extends OmegaTarget.Options {
         _tempProfile: this._tempProfile,
         _tempProfileActive: this._tempProfileActive,
       }
-      chrome.storage.session.set(_zeroState)
+      chrome.storage.session.set(_zeroState).catch((e: any) => this.log.error('Failed to save temp profile state', e))
     })
   }
 
@@ -172,7 +173,7 @@ class ChromeOptions extends OmegaTarget.Options {
         }
       }
       if (error) {
-        // TODO(catus): Find a better way to notify the user.
+        this.log.error('Some profile updates failed. Check results for details.')
       }
       return results
     })
