@@ -3,28 +3,25 @@
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "@uirouter/angularjs": "~1.1.0",
-    "angular": "1.8.3",
-    "angular-animate": "1.8.3",
-    "angular-i18n": "1.8.3",
-    "angular-sanitize": "1.8.3",
-    "angular-ui-bootstrap": "~2.5.0",
     "bootstrap": "~3.4.1",
     "file-saver": "~2.0.5",
-    "nprogress": "~0.2.0",
     "omega-pac": "workspace:*",
-    "scriptjs": "~2.5.9"
+    "vue": "^3.5.31",
+    "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.5",
+    "@vue/compiler-sfc": "^3.5.31",
     "autoprefixer": "^10.4.0",
-    "esbuild": "^0.25.0",
     "less": "^4.2.0",
-    "ng-annotate-patched": "^1.12.1",
     "postcss": "^8.5.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vite": "^6.4.1",
+    "vue-tsc": "^3.2.6"
   },
   "scripts": {
-    "build": "node build.mjs",
-    "typecheck": "tsc --noEmit"
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "vue-tsc --noEmit"
   }
 }
